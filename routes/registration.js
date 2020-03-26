@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const datb = require('../database/database');
+var bcrypt = require('bcrypt-nodejs');
 
 router.post ('/cust_register',(req,res)=>{
 
@@ -11,11 +12,12 @@ router.post ('/cust_register',(req,res)=>{
     address:req.body.address,
     email_address:req.body.email_address,
     cell_no:req.body.cell_no,
-    password:req.body.password
+    password:bcrypt.hashSync(req.body.password, null, null)  
   }
+
   datb.query('SELECT * FROM customer where email_address = ?', cust.email_address, (error, results)=>{
     if(results[0]){
-      res.send({'message':'User already exits'});
+      res.send({'message':'user already exist'});
     }else{
       datb.query('INSERT INTO customer set ?', [cust], (error, results)=>{
         if(error){
@@ -27,14 +29,14 @@ router.post ('/cust_register',(req,res)=>{
     }
   })  
 });
- 
+
 router.post ('/restu_register',(req,res)=>{
 
   let restaurant={
    
     restuarant_name:req.body.restuarant_name,
     address:req.body.address,
-    password:req.body.password,
+    password:bcrypt.hashSync(req.body.password, null, null),
     email_address:req.body.email_address
   }
 
@@ -55,4 +57,3 @@ router.post ('/restu_register',(req,res)=>{
 
 
 module.exports = router;
-  //done

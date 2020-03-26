@@ -52,7 +52,8 @@
          }
      })
  });
- 
+
+
 
  //delete an item from cart
  router.delete('/carts/:id', (req,res) => {
@@ -66,4 +67,8 @@
  
      })
  })
+ 
+
+
+ 
  module.exports = router;

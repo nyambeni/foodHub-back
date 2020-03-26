@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2020 at 03:26 PM
+-- Generation Time: Mar 16, 2020 at 03:39 PM
 -- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.1
+-- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -35,6 +35,13 @@ CREATE TABLE `carts` (
   `qty` int(255) DEFAULT NULL,
   `totalAmt` double GENERATED ALWAYS AS (`price` * `qty`) VIRTUAL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`order_id`, `name`, `price`, `qty`) VALUES
+(1, 'Chicken & Mushroom', 149, 50);
 
 -- --------------------------------------------------------
 
@@ -72,20 +79,43 @@ CREATE TABLE `customer` (
   `email_address` varchar(255) NOT NULL,
   `cell_no` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `streetname` varchar(255) NOT NULL,
-  `house_number` varchar(30) NOT NULL
+  `cust_status` tinyint(1) NOT NULL DEFAULT 1,
+  `images` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`customer_ID`, `name`, `surname`, `address`, `email_address`, `cell_no`, `password`, `streetname`, `house_number`) VALUES
-(0, '', '', 'sosha south monate', 'mgl@gmail.com', '', '458', '', ''),
-(963852741, 'athandwa', 'zeni', '1490 Soshanguve', 'tutu2@yahoo.com', '072360360', 'idont9876', '', ''),
-(963852742, 'kabelo', 'malete', '124 maponto 7th Avennue', 'kabelo@gmail.com', '0213545874', '1212', '', ''),
-(963852743, 'kabelo', 'malete', '124 maponto 7th Avennue', 'kabelo@gmail.com', '0213545874', '1212', '', ''),
-(963852744, 'kabelo', 'malete', '124 maponto 7th Avennue', 'kabelo@gmail.com', '0213545874', '1212', '', '');
+INSERT INTO `customer` (`customer_ID`, `name`, `surname`, `address`, `email_address`, `cell_no`, `password`, `cust_status`, `images`) VALUES
+(0, '', '', 'sosha south monate', 'mgl@gmail.com', '', '458', 1, ''),
+(963852741, 'athandwa', 'zeni', '1490 Soshanguve', 'tutu2@yahoo.com', '072360360', 'idont9876', 1, ''),
+(963852742, 'kabelo', 'malete', '124 maponto 7th Avennue', 'kabelo@gmail.com', '0213545874', '1212', 1, ''),
+(963852743, 'kabelo', 'malete', '124 maponto 7th Avennue', 'kabelo@gmail.com', '0213545874', '1212', 1, ''),
+(963852744, 'kabelo', 'malete', '124 maponto 7th Avennue', 'kabelo@gmail.com', '0213545874', '1212', 1, ''),
+(963852745, 'rme', 'suame', 'address', 'emailess', '8526125', '$2a$10$YtzvSXPzK9j5GOp/M0fCF.0Hn.Ay7xBzialo12Jxl8AGhy1KQk3NC', 1, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu`
+--
+
+CREATE TABLE `menu` (
+  `item_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `item_name` varchar(255) NOT NULL,
+  `item_price` int(11) NOT NULL,
+  `item_description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `menu`
+--
+
+INSERT INTO `menu` (`item_id`, `product_id`, `item_name`, `item_price`, `item_description`) VALUES
+(1, 0, 'kota', 22, 'Chips,and atcher'),
+(2, 0, 'chicken', 25, 'chicken wings');
 
 -- --------------------------------------------------------
 
@@ -95,9 +125,18 @@ INSERT INTO `customer` (`customer_ID`, `name`, `surname`, `address`, `email_addr
 
 CREATE TABLE `orders` (
   `order_id` int(255) NOT NULL,
+  `fk_Customer_ID` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `totalAmount` double NOT NULL
+  `totalAmount` double NOT NULL,
+  `order_Status` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `fk_Customer_ID`, `quantity`, `totalAmount`, `order_Status`) VALUES
+(1, 0, 20, 650, 0);
 
 -- --------------------------------------------------------
 
@@ -120,18 +159,11 @@ CREATE TABLE `payment` (
 --
 
 CREATE TABLE `products` (
-  `product_id` int(255) NOT NULL,
-  `product_name` varchar(255) NOT NULL,
-  `product_price` int(11) NOT NULL,
-  `product_description` varchar(255) NOT NULL
+  `product_id` int(11) NOT NULL,
+  `product_name` varchar(150) NOT NULL,
+  `quantity` int(100) NOT NULL,
+  `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`product_id`, `product_name`, `product_price`, `product_description`) VALUES
-(1, 'fried fish', 22, 'kentucky');
 
 -- --------------------------------------------------------
 
@@ -144,17 +176,18 @@ CREATE TABLE `restuarant_admin` (
   `restuarant_name` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `email_address` varchar(255) NOT NULL
+  `email_address` varchar(255) NOT NULL,
+  `rest_status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `restuarant_admin`
 --
 
-INSERT INTO `restuarant_admin` (`restuarant_id`, `restuarant_name`, `address`, `password`, `email_address`) VALUES
-(123456789, 'kentucky', 'shop 19 Soshanguve', 'admin123', 'rest@gmail.com'),
-(963852741, 'chicken now', 'shop 3 soshanguve', 'admin1234', 'resst@yahoo.com\r\n'),
-(963852742, 'mogodu', 'sosha south monate', '458', 'mgl@gmail.com');
+INSERT INTO `restuarant_admin` (`restuarant_id`, `restuarant_name`, `address`, `password`, `email_address`, `rest_status`) VALUES
+(123456789, 'kentucky', 'shop 19 Soshanguve', 'admin123', 'rest@gmail.com', 1),
+(963852741, 'chicken now', 'shop 3 soshanguve', 'admin1234', 'resst@yahoo.com\r\n', 1),
+(963852742, 'mogodu', 'sosha south monate', '458', 'mgl@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -164,8 +197,6 @@ INSERT INTO `restuarant_admin` (`restuarant_id`, `restuarant_name`, `address`, `
 
 CREATE TABLE `system_admin` (
   `system_Id` int(11) NOT NULL,
-  `customer_ID` int(255) NOT NULL,
-  `restaurant_id` int(11) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email_address` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -174,9 +205,8 @@ CREATE TABLE `system_admin` (
 -- Dumping data for table `system_admin`
 --
 
-INSERT INTO `system_admin` (`system_Id`, `customer_ID`, `restaurant_id`, `password`, `email_address`) VALUES
-(147258369, 0, 963852741, 'syst123', 'admin@yahoo.com'),
-(987654321, 0, 147258369, 'admin234', 'syst@gmail.com');
+INSERT INTO `system_admin` (`system_Id`, `password`, `email_address`) VALUES
+(1, 'admin@123', 'admin123@yahoo.com');
 
 --
 -- Indexes for dumped tables
@@ -199,6 +229,12 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_ID`);
+
+--
+-- Indexes for table `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`item_id`);
 
 --
 -- Indexes for table `orders`
@@ -238,25 +274,37 @@ ALTER TABLE `system_admin`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=963852745;
+  MODIFY `customer_ID` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=963852746;
+
+--
+-- AUTO_INCREMENT for table `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
   MODIFY `payID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `restuarant_admin`
