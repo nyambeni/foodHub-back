@@ -7,6 +7,7 @@ const datb = require('../database/database');
 // vendor / customer/ and himself (super admin) CRUD
 // products/ menu/ categories orders(vendor/restaurant)
 
+
 // view all admins
 
 router.get('/admin', (req,res)=>{
@@ -23,6 +24,9 @@ router.get('/admin', (req,res)=>{
 
     });
 });
+
+
+
 
 // view all customers
 router.get('/allCustomers', (req,res)=>{
@@ -70,6 +74,7 @@ router.get('/allrestuarant', (req,res)=>{
     });
 });
 
+// view specific restaurant
 router.get('/aRestaurant/:restuarant_id', (req, res) => {
 
     let restuarant_id ={restuarant_id:req.body.restuarant_id}
@@ -151,6 +156,7 @@ router.get('/aRestaurant/:restuarant_id', (req, res) => {
             }); 
         });
 
+        // do not use this delete
         router.delete('/restuarant/:id',function(req, res){
    
             datb.query('DELETE FROM restuarant_admin WHERE restuarant_id = ?',[req.params.id], (err,results,fields)=>{
@@ -163,7 +169,7 @@ router.get('/aRestaurant/:restuarant_id', (req, res) => {
             })
         
 
-        // deleting customer profile
+        // deleting customer profile // use this one
        router.put('/deactivateRest',(req ,res)=>{
 
      

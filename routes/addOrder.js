@@ -4,6 +4,31 @@
  const datb = require('../database/database');
  
  
+ // view carts for particular order 
+ 
+router.get('/viewCart/:order_id', (req, res) => {
+
+    let order_id ={order_id:req.body.order_id}
+ 
+   datb.query('SELECT * FROM carts WHERE order_id = ?',[order_id], (error, results,fields) => {
+       if(error) throw error;
+       res.send({results});
+   });
+});
+
+
+// view all carts
+router.get('/aViewCart', (req, res) => {
+
+  
+   datb.query('SELECT * FROM carts ', (error, results,fields) => {
+       if(error) throw error;
+       res.send({results});
+   });
+});
+
+
+
 
  router.post('/add', function (req, res) {
     let prod = {
@@ -33,6 +58,44 @@
 
     })
 })
+
+// add orders 
+router.post('/addOrder',function(req,res){
+    let order ={
+        order_id:req.body.order_id,
+        customer_ID:req.body.customer_ID,
+        name:req.body.name,
+        qty:req.body.qty,
+        price:req.body.price,  
+       
+    }
+    let order_id = req.body.order_id
+    datb.query('SELECT * from orders where order_id = ?',[order_id],function(error,results){
+        if(error)throw error;
+        else{
+            datb.query('INSERT INTO orders SET ? ',[order],function(error,results){
+                if(error)throw error
+                else{
+                    res.send({results});
+                }
+            })
+        }
+    })
+});
+
+//view all orders 
+
+router.get('/viewOrders',(req,res)=>{
+    datb.query('SELECT * from orders', function(error,results,fields){
+        if(error)throw error
+        else
+        {
+            return res.send({results});
+        }
+    })
+    
+})
+
 
 //update the cart
  router.put('/addtocart', function (req, res) {

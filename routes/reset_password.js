@@ -120,11 +120,8 @@ router.put('/vendor_reset_password', function(req, res) {
         else{
 
             
-
               res.send({"message":"Password has been successfully changed"}); 
-
-            
-
+        
         }
 
         }

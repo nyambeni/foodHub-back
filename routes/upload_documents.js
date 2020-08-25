@@ -20,7 +20,7 @@ let storage = multer.diskStorage({
 
 let upload = multer({storage: storage});
 
- router.post('/upload_file',upload.single('file') ,function (req, res) {
+ router.post('/upload_file',upload.single('file'),function(req, res) {
    
     var message = "Error! in image upload."
     if (!req.file) {
@@ -38,9 +38,26 @@ let upload = multer({storage: storage});
  
       }
 });
-  
 
+// upload multlple file
+router.post('/uploadMultiple_file',upload.any('file'),function(req, res) {
+   
+  var message = "Error! in image upload."
+  if (!req.file) {
+        console.log("No file received");
+        message = "Error! in document upload."
+        res.send({message: message, status:'danger'});
+} else{
+      
+    console.log('file received');
+    var sql = `INSERT INTO file_uploads (name, type, size) VALUES ('${req.file.filename}','${req.file.mimetype}','${req.file.size});`;
 
+      
+    message = "Successfully! uploaded";
+    res.send({message: message, status:'success'});
+
+    }
+});
 // get file
 
 router.get('/download',function(req,res,next){

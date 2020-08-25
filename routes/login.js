@@ -17,7 +17,7 @@ const bodyParser = require('body-parser');
  router.use(bodyParser.json());
 
 
-router.get('/cust_login', function(req, res) {
+router.post('/cust_login', function(req, res) {
 
     let email = req.body.email_address;
     let password = req.body.password;
@@ -45,7 +45,7 @@ router.get('/cust_login', function(req, res) {
  });
  
 
- router.get('/restu_login', function(req, res) {
+ router.post('/restu_login', function(req, res) {
 
     let email = req.body.email_address;
     var password = req.body.password;
@@ -70,7 +70,7 @@ router.get('/cust_login', function(req, res) {
  
  
 
-router.get('/admin_login', function(req, res) {
+router.post('/admin_login', function(req, res) {
 
     let email = req.body.email_address;
     var password = req.body.password;
