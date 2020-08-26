@@ -105,7 +105,7 @@ router.get('/viewOrders',(req,res)=>{
      var price = req.body.price
  
      sql = "UPDATE carts SET qty = ? where name = ?";
-     datb.query(sql, [qty, name], function (err, results, fields) {
+     datb.query(sql, [qty, name,], function (err, results, fields) {
          if (!err) {
  
              res.send({ data: results })
