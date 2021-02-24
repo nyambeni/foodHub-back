@@ -15,7 +15,7 @@ router.get('/cust_login', function(req, res) {
         }else{
              if(result[0]){
                 if(result[0].password == password){
-                    res.send({"login successfully":result});
+                    res.send({"login successfully":result})
                    
 				   const token = jwt.sign(
 						{   
@@ -31,7 +31,7 @@ router.get('/cust_login', function(req, res) {
 							{
 								expiresIn: "1h"
 							}
-						);
+						)
 						
 						//display the incoded token
 						console.log(token);
@@ -39,6 +39,21 @@ router.get('/cust_login', function(req, res) {
 						const header = jwt.decode(token);
 						console.log(header.address);
 					
+					
+						var details = {
+							custID : header.custID,
+							token : token
+						}
+						
+						
+						datb.query('INSERT INTO logbook set ?', [details], (error, results)=>{
+							if(error){
+							  res.send({'message':'Something went wrong!'});
+							}else
+							{
+							  res.send({'message':'logbook updated'});
+							}
+						})
 					
                 } else{
                     res.send({"message":"Email and password does not match"});
