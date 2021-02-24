@@ -5,9 +5,9 @@ const datb = require('../database/database');
 
 router.get('/search',function(req,res){
  
-    let product =req.body.product_name
+    let search =req.body.product_name
 
-    datb.query('SELECT product_name from products where product_name = "'+product+'"',function(error, results, fields) {
+    datb.query('SELECT product_name from products where product_name LIKE "%'+search+'%" OR product_description LIKE "%'+search+'%"',function(error, results, fields) {
         if(error) throw error;
         else
         {    

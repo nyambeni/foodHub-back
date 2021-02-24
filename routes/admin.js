@@ -25,7 +25,7 @@ router.get('/admin', (req,res)=>{
 
 router.get('/all_customers', (req,res)=>{
 
-    datb.query('SELECT * FROM customers',function(error,results,fields){
+    datb.query('SELECT * FROM customer',function(error,results,fields){
  
         if(error)
         {
@@ -41,7 +41,7 @@ router.get('/all_customers', (req,res)=>{
 
 router.get('/allrestuarant', (req,res)=>{
 
-    datb.query('SELECT * FROM restuarant_admin',function(error,results,fields){
+    datb.query('SELECT * FROM restuarant',function(error,results,fields){
  
         if(error)
         {
@@ -66,11 +66,11 @@ router.get('/allrestuarant', (req,res)=>{
           
     }
     let email = (req.body.email)  
-    datb.query('UPDATE restuarant_admin SET ? WHERE email = "'+email+'"',[restuarant],function (error, results, fields)
+    datb.query('UPDATE restuarant SET ? WHERE email_address = "'+email+'"',[restuarant],function (error, results, fields)
     {
         if (error) throw error 
         else{
-          datb.query('select * from restuarant_admin where email = "'+email+'"',[restuarant],function (error, results, fields){
+          datb.query('select * from restuarant where email_address = "'+email+'"',[restuarant],function (error, results, fields){
               return res.send({results})
           })
       
@@ -81,7 +81,7 @@ router.get('/allrestuarant', (req,res)=>{
 
 router.delete('/restuarant/:id',function(req, res){
    
-    datb.query('DELETE FROM restuarant_admin WHERE restuarant_id = ?',[req.params.id], (err,results,fields)=>{
+    datb.query('DELETE FROM restuarant WHERE restuarant_id = ?',[req.params.id], (err,results,fields)=>{
         if(!err){
                     res.send('Deleted successfully.');
                 }else{

@@ -27,7 +27,7 @@ router.post ('/new_products',(req,res)=>{
     }
   })  
 });
-// new category
+// new category doesnt make any sense y would u want to insert a category 
 router.post ('/new_category',(req,res)=>{
 
   let category={
@@ -62,11 +62,11 @@ router.put('/restu_update', (req,res)=>{
     email_address:req.body.email_address      
   }
   let restuarant_id = (req.body.restuarant_id)  
-  datb.query('UPDATE categories SET ? WHERE restuarant_id = "'+restuarant_id+'"',[restuarant],function (error, results, fields)
+  datb.query('UPDATE restuarant SET ? WHERE restuarant_id = "'+restuarant_id+'"',[restuarant],function (error, results, fields)
   {
       if (error) throw error 
       else{
-        datb.query('select * from categories where restuarant_id = "'+restuarant_id+'"',[restuarant],function (error, results, fields){
+        datb.query('select * from restuarant where restuarant_id = "'+restuarant_id+'"',[restuarant],function (error, results, fields){
             return res.send({results})
         })
     
@@ -75,7 +75,7 @@ router.put('/restu_update', (req,res)=>{
 
 })
 
-// categories update
+// categories update this one to doesnt make Any sense
 
 router.put('/categories_update', (req,res)=>{
   let category ={ 
@@ -101,7 +101,8 @@ router.put('/categories_update', (req,res)=>{
 // products update
 router.put('/product_update', (req,res)=>{
   let product ={ 
-    product_price:req.body.address,
+   product_name:req.body.name,
+    product_price:req.body.price,
     product_description:req.body.product_description
           
   }
@@ -128,7 +129,7 @@ router.delete('/restu_delete/:id',function(req, res){
     //let email = ({email_address:req.body.email_address});
     //let sql = 'DELETE FROM restuarant_admin where email_address = "'+email_address+'"'
        
-       connection.query('DELETE * FROM restuarant_admin where restuarant_id =?', [req.params.id], function(error, results, fields){
+       connection.query('DELETE * FROM restuarant where restuarant_id =?', [req.params.id], function(error, results, fields){
            if(error) throw error;
            else
            {
