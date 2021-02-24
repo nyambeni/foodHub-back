@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
+const bodyParser = require('body-parser');
 const datb = require('../database/database');
 
 router.post ('/cust_register',(req,res)=>{
@@ -29,20 +30,29 @@ router.post ('/cust_register',(req,res)=>{
 });
  
 router.post ('/restu_register',(req,res)=>{
-
+var status = "PENDING";
   let restaurant={
-   
     restuarant_name:req.body.restuarant_name,
     address:req.body.address,
     password:req.body.password,
-    email_address:req.body.email_address
+    email_address:req.body.email_address,
+	cellNo:req.body.cellNo,
+	status :status
   }
 
-  datb.query('SELECT * FROM restuarant_admin where email_address = ?', restaurant.email_address, (error, results)=>{
+console.log(req.body.restuarant_name);
+console.log(req.body.address);
+console.log(req.body.password);
+console.log(req.body.email_address);
+console.log(req.body.cellNo);
+console.log(status);
+
+
+ datb.query('SELECT * FROM restuarant where email_address = ?', [restaurant.email_address], (error, results)=>{
  if(results[0]){
   res.send({'message':'User already exits'});
 }else{
-  datb.query('INSERT INTO restuarant_admin set ?', [restaurant], (error, results)=>{
+  datb.query('INSERT INTO restuarant set ?', [restaurant], (error, results)=>{
     if(error){
       res.send({'message':'Something went wrong!'});
     }else{
