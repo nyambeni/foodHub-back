@@ -31,7 +31,7 @@ app.use(function (req, res, next) {
  app.use('/', require('./routes/search'));
  app.use('/', require('./routes/addOrder'));
  app.use('/', require('./routes/product'));
-
+ app.use('/', require('./routes/driver'));
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 3000;
 const server = app.listen(port, function () {

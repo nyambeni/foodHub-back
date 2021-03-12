@@ -11,11 +11,10 @@ router.get('/search',function(req,res){
         if(error) throw error;
         else
         {    
-          //  datb.query('SELECT * from products where product_name = "%'+product+'%"', 
-           // function(error, results, fields){
+          
             return res.send({"the results are ":results})
         }
-           // )}
+          
     }); 
 
 })
