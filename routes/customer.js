@@ -14,12 +14,12 @@ router.put('/cust_update', (req,res)=>{
      }
 let customer_ID = (req.body.customer_ID)
      
-  datb.query('UPDATE customer SET ? where customer_ID = "'+customer_ID+'"',[cust],function (error, results, fields)
+  datb.query('UPDATE customer SET ? where email_address = "'+cust.email_address+'"',[cust],function (error, results, fields)
   {
       if (error) throw error;
       else
       {
-        datb.query('select * from customer where customer_ID = "'+customer_ID+'"',[cust],function (error, results, fields){
+        datb.query('select * from customer where email_address = "'+cust.email_address+'"',function (error, results, fields){
         return res.send({results})
     })
   }       
@@ -27,5 +27,13 @@ let customer_ID = (req.body.customer_ID)
   })
 
   //done
+  
+  
+  
+  
+  
+  
+  
+  
 
 module.exports = router ;

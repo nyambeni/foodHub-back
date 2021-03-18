@@ -21,4 +21,17 @@ router.post('/b', (req, res) => {
              })
 });
 
+
+
+
+router.get('/selectProduct/:resturantName', (req,res)=>{
+
+  connection.query('select * from proctuct where resturantName=?', [req.params.resturantName], function (error, results, fields) {
+	  if (error) throw error;
+	  res.end(JSON.stringify(results));
+	});
+
+
+});
+
 module.exports = router;

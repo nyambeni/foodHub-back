@@ -7,6 +7,20 @@ const mysqlConn= require('./database/database');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 var jwt = require('jsonwebtoken');
+const session = require('express-session');
+
+//session express
+var sess = {
+	secret: process.env.SESSION_SECRET,
+	cookie: {},
+	saveUninitialized: false,
+	resave: false,
+	secret: 'secret token'
+}
+
+app.use(session(sess));
+
+
 
 //we are using app because of express
 app.use( bodyParser.json() );       // to support JSON-encoded bodies

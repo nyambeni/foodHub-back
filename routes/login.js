@@ -44,16 +44,16 @@ router.get('/cust_login', function(req, res) {
 							custID : header.custID,
 							token : token
 						}
+						req.session.user = header.custID;
 						
-						
-						datb.query('INSERT INTO logbook set ?', [details], (error, results)=>{
+						/*datb.query('INSERT INTO logbook set ?', [details], (error, results)=>{
 							if(error){
 							  res.send({'message':'Something went wrong!'});
 							}else
 							{
 							  res.send({'message':'logbook updated'});
 							}
-						})
+						})*/
 					
                 } else{
                     res.send({"message":"Email and password does not match"});
@@ -67,7 +67,7 @@ router.get('/cust_login', function(req, res) {
  
 
  router.get('/restu_login', function(req, res) {
-
+	
     var email = req.body.email_address;
     var password = req.body.password;
  
