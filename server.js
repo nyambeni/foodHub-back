@@ -13,9 +13,13 @@ const session = require('express-session');
 var sess = {
 	secret: process.env.SESSION_SECRET,
 	cookie: {},
-	saveUninitialized: false,
+	saveUninitialized: true, //false
+	unset: 'destroy',
 	resave: false,
-	secret: 'secret token'
+	name: 'session cookie name',
+	secret: 'secret token',
+	duration: 30 * 60 * 1000,
+	activeDuration: 5 * 60 * 1000
 }
 
 app.use(session(sess));

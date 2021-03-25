@@ -132,6 +132,44 @@
 						if(error){
 						  res.send({'message':'Something went wrong!'});
 						}else{
+							
+							datb.query('SELECT * FROM driver where email = ?', driver.email, (error, results)=>{
+								if(results[0]){
+								  
+									var addess =
+									{
+										driverID:id
+										street:req.body.street,
+										surburb:req.body.surburb,
+										city:req.body.city,
+										postalCode:req.body.postalCode
+									}
+								  
+								  
+								  
+									datb.query('INSERT INTO driveradd set ?', [address], (error, results)=>{
+									if(error){
+									  res.send({'message':'Something went wrong!'});
+									}else{
+										
+										res.send({'message':'Driver successfully Registered!'});
+									}
+								  })
+								  
+								  
+								  
+								  
+								  
+								  
+								  
+								  
+								  
+								}else{	
+									res.send({'message':'Driver already exist'});
+								
+								}
+							})
+							
 							res.send({'message':'Driver successfully Registered!'});
 						}
 					  })

@@ -3,56 +3,60 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const datb = require('../database/database');
+var jwt = require('jsonwebtoken');
 
 // vendor / customer/ and himself (super admin) CRUD
 // products/ menu/ categories orders(vendor/restaurant)
 
-router.get('/admin', (req,res)=>{
+router.get('/all_restuarant', (req,res)=>{
 
-    datb.query('SELECT * FROM system_admin',function(error,results,fields){
- 
-        if(error)
-        {
-            res.send({"failed":"error occurred"})
-        }
-        else{
-                   return res.send({data:results})
-            }
+	if(req.session.admin)
+	{
+		datb.query('SELECT * FROM restuarant',function(error,results,fields){
+	 
+			if(error)
+			{
+				res.send({"failed":"error occurred"})
+			}
+			else{
+						console.log(req.session.admin);
+						
+					   return res.send({data:results})
+				}
 
-    });
+		});
+	}else{
+		 res.send({"failed":"try to log in first"})
+		 console.log(req.session.user)
+	}
 });
 
 
 router.get('/all_customers', (req,res)=>{
 
-    datb.query('SELECT * FROM customer',function(error,results,fields){
- 
-        if(error)
-        {
-            res.send({"failed":"error occurred"})
-        }
-        else{
-                   return res.send({data:results})
-            }
 
-    });
+	if(req.session.superAdmin)
+	{
+		datb.query('SELECT * FROM customer',function(error,results,fields){
+	 
+			if(error)
+			{
+				res.send({"failed":"error occurred"})
+			}
+			else{
+						console.log(req.session.superAdmin)
+					   return res.send({data:results})
+				}
+
+		});
+	}else{
+		
+		 res.send({"failed":"try to log in first"})
+		 
+	}
 });
 
 
-router.get('/allrestuarant', (req,res)=>{
-
-    datb.query('SELECT * FROM restuarant',function(error,results,fields){
- 
-        if(error)
-        {
-            res.send({"failed":"error occurred"})
-        }
-        else{
-                   return res.send({data:results})
-            }
-
-    });
-});
 
 //done
 
@@ -90,7 +94,10 @@ router.delete('/restuarant/:id',function(req, res){
        }); 
     })
 
-    router.put('/cust_update', (req,res)=>{
+
+
+
+router.put('/cust_update', (req,res)=>{
         let cust ={ 
             customer_ID:req.body.customer_ID,
             name:req.body.name,
