@@ -17,6 +17,7 @@ router.get('/cust_login', function(req, res) {
             res.send({"message":"error ocurred"});
         }else{
              if(result[0]){
+				 	
                 if(result[0].password == password){
                     res.send({"login successfully":result})
                    
@@ -35,39 +36,44 @@ router.get('/cust_login', function(req, res) {
 								expiresIn: "1h"
 							}
 						)
-						//27 hathaway gresswold johannesburg
-						//display the incoded token
+						
 						console.log(token);
 						
-						/*req.session.name = result[0].name;
-						req.session.surname = result[0].surname;
-						req.session.email_address = result[0].email_address;
-						req.session.address = result[0].address;*/
 						
 						
 						//here we decode and display the token 
 						const header = jwt.decode(token);
 						
-						
+						var date_ob = new Date();
 					
+
 						var details = {
-							custID : header.custID,
-							token : token
+							token : token,
+							login_Time: date_ob
 						}
 						
 						
-						/*datb.query('INSERT INTO logbook set ?', [details], (error, results)=>{
-							if(error){
-							  res.send({'message':'Something went wrong!'});
-							}else
-							{
-							  res.send({'message':'logbook updated'});
-							}
-						})*/
+						  datb.query('UPDATE logbook SET ? where email = "'+req.session.user+'"',[details],function (errors, results, fields)
+						  {
+							  if(results[0])
+							  {	
+								datb.query('select * from customer where email_address = "'+req.session.user+'"',function (errors, results, fields)
+								{
+									if(results[0].email_address)
+									{
+									 res.send({results})
+									 res.send({"message":"successfully logged in"})
+									}
+								})
+								
+								
+							  }       
+						})
 					
                 } else{
                     res.send({"message":"Email and password does not match"});
-                }  
+                }
+  
             }else{
                 res.send({"message":"Email does not exits"});
             }

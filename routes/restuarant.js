@@ -51,21 +51,6 @@ router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 		console.log(req.body.resturantName);
 		
 		
-/*datb.query('SELECT * FROM category_id where resturantName ="'+product.resturantName+'" and product_name = ?', product.email_address, (error, results)=>{
- if(results[0]){
-  res.send({'message':'category already exits'});
-}else{
-  datb.query('INSERT INTO category_id set ?', [category], (error, results)=>{
-    if(error){
-      res.send({'message':'Something went wrong!'});
-    }else{
-      res.send({'message':'category successfully entered!'});
-    }
-  })
-}
-})	*/
-		
-		
 		datb.query('INSERT INTO products SET ?',[product], (error, results)=>{
 			if(error){
 			  res.send({'message':'Something went wrong!'})

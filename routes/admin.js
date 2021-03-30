@@ -12,6 +12,7 @@ router.get('/all_restuarant', (req,res)=>{
 
 	if(req.session.admin)
 	{
+		
 		datb.query('SELECT * FROM restuarant',function(error,results,fields){
 	 
 			if(error)

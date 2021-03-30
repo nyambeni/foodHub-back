@@ -4,6 +4,11 @@
 	const bodyParser = require('body-parser');
 	const datb = require('../database/database');
 	var bcrypt = require('bcrypt');
+	
+	//this will insert logo for resturent
+
+const multer= require('multer');
+const path = require('path');
 
 	router.post ('/cust_register',(req,res)=>{
 		
@@ -19,21 +24,49 @@
 				  let cust={
 					name:req.body.name,
 					surname:req.body.surname,
-					address:req.body.address,
 					email_address:req.body.email_address,
 					cell_no:req.body.cell_no,
-					password:hash
+					password:req.body.Password
+				  }
+				  
+				  let add ={
+					email: req.body.email_address,
+					street: req.body.street,
+					surburb: req.body.surburb,
+					city: req.body.city,
+					postalCode:req.body.postalCode
+				  }
+				  
+				   let log ={
+					email:req.body.email_address,
+					token:"N/A"
 				  }
 				
 				  datb.query('SELECT * FROM customer where email_address = ?', cust.email_address, (error, results)=>{
 					if(results[0]){
 					  res.send({'message':'User already exist'});
 					}else{
+						
+						//to insert into customer table
 					  datb.query('INSERT INTO customer set ?', [cust], (error, results)=>{
 						if(error){
-						  res.send({'message':'Something went wrong!'});
+						  res.send({'message':'Something went wrong with customer !'});
 						}else{
-							res.send({'message':'User successfully Registered!'});
+									//to insert into address table
+									datb.query('INSERT INTO customeradd set ?', [add], (error, results)=>{
+										if(error){
+										  res.send({'message':'Something went wrong!'});
+										}else{
+											//to insert into logbook table
+											datb.query('INSERT INTO logbook set ?', [log], (error, results)=>{
+												if(error){
+												  res.send({'message':'Something went wrong with logbook!'});
+												}else{
+													res.send({'message':'User successfully Registered!'});
+												}
+											})
+										}
+									})
 						}
 					  })
 					}
@@ -42,8 +75,38 @@
 	    })
 	});
 	 
-	router.post ('/restu_register',(req,res)=>{
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+
+// SET STORAGE
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'upload/logo')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + "-" + file.originalname)
+    }
+  })
+   
+var upload = multer({ storage: storage })
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 //we have an error but it works proper
+	router.post ('/restu_register',upload.single('picture'),(req,res,next)=>{
 	var status = "PENDING";
+	
+	const file = req.file
 	
 		bcrypt.hash(req.body.Password, 10, (err,hash) => {
 						
@@ -54,37 +117,80 @@
 				});
 			}else
 			{
-					let restaurant={
-						restuarant_name:req.body.restuarant_name,
-						address:req.body.address,
-						password:hash,
-						email_address:req.body.email_address,
-						cellNo:req.body.cellNo,
-						status :status
+					if(!file)
+					{
+						const error = new Error('Please upload a file')
+						  error.httpStatusCode = 400
+						  return next(error)
+					}else
+					{
+							let restaurant={
+							restuarant_name:req.body.restuarant_name,
+							password:hash,
+							email_address:req.body.email_address,
+							cellNo:req.body.cellNo,
+							logo:file.path,
+							status :status
+						  }
+				
+						console.log(req.body.restuarant_name);
+					
+						console.log(req.body.Password);
+						console.log(req.body.email_address);
+						console.log(req.body.cellNo);
+						console.log(status);
+						
+						
+						let addRes ={
+						mail_address: req.body.email_address,
+						street: req.body.street,
+						surburb: req.body.surburb,
+						city: req.body.city,
+						postalCode:req.body.postalCode
 					  }
-			
-					console.log(req.body.restuarant_name);
-					console.log(req.body.address);
-					console.log(req.body.password);
-					console.log(req.body.email_address);
-					console.log(req.body.cellNo);
-					console.log(status);
 
 
-					 datb.query('SELECT * FROM restuarant where email_address = ?', [restaurant.email_address], (error, results)=>{
-					 if(results[0]){
-					  res.send({'message':'restuarant already exist'});
-					}else{
-					  datb.query('INSERT INTO restuarant set ?', [restaurant], (error, results)=>{
-						if(error){
-						  res.send({'message':'Something went wrong!'});
+						let logRes ={
+							email:req.body.email_address,
+							token:"N/A"
+						 }
+
+						 datb.query('SELECT * FROM restuarant where email_address = ?', [restaurant.email_address], (error, results)=>{
+						 if(results[0]){
+						  res.send({'message':'restuarant already exist'});
 						}else{
-						  res.send({'message':'restuarant successfully Registered!'});
+						
+						  //add resturent
+						  datb.query('INSERT INTO restuarant set ?', [restaurant], (error, results)=>{
+							if(error){
+							  res.send({'message':'Something went wrong!'});
+							}else{
+								
+								//to insert into address table
+										datb.query('INSERT INTO restuarantadd set ?', [addRes], (error, results)=>{
+											if(error){
+											  res.send({'message':'Something went wrong!'});
+											}else{
+												//to insert into logbook table
+												datb.query('INSERT INTO logbook set ?', [logRes], (error, results)=>{
+													if(error){
+													  res.send({'message':'Something went wrong with logbook!'});
+													}else{
+														res.send({'message':'User successfully Registered!'});
+													}
+												})
+											}
+										})
+								
+								
+								
+								
+							  res.send({'message':'restuarant successfully Registered!'});
+							}
+						  })
 						}
-					  })
-					}
-					}) 
-			
+						}) 
+				}
 			}
 		})
 	});
@@ -138,7 +244,7 @@
 								  
 									var addess =
 									{
-										driverID:id
+										driverID:id,
 										street:req.body.street,
 										surburb:req.body.surburb,
 										city:req.body.city,
