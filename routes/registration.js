@@ -4,7 +4,7 @@
 	const bodyParser = require('body-parser');
 	const datb = require('../database/database');
 	var bcrypt = require('bcrypt');
-	
+	var nodemailer = require('nodemailer');
 	//this will insert logo for resturent
 
 const multer= require('multer');
@@ -63,6 +63,44 @@ const path = require('path');
 												  res.send({'message':'Something went wrong with logbook!'});
 												}else{
 													res.send({'message':'User successfully Registered!'});
+													
+													
+													/*var transporter = nodemailer.createTransport({
+													  service: 'gmail',
+													  auth: {
+														user: 'j.mnisi.c.jm@gmail.com',
+														pass: '#Mdawekamatla1'
+													  }
+													});*/
+													
+													let transporter = nodemailer.createTransport({
+														host: "smtp.gmail.com",
+														port: 587,
+														secure: false, // true for 587, false for other ports
+														requireTLS: true,
+														auth: {
+															user: 'j.mnisi.c.jm@gmail.com', 
+															pass: '#Mdawekamatla1', 
+														},
+													});
+													
+													var mailOptions = {
+													  from: 'j.mnisi.c.jm@gmail.com',
+													  to: 'mfanafuthimdawe@gmail.com',
+													  subject: 'Tesing',
+													  text: `This user is registered now`
+													};
+
+													transporter.sendMail(mailOptions, function(error, info){
+													  if (error) {
+														console.log(error);
+													  } else {
+														console.log('Email sent: ' + info.response);
+													  }
+													});
+													
+													
+													
 												}
 											})
 										}
