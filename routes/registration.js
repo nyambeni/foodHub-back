@@ -12,7 +12,7 @@ const path = require('path');
 
 	router.post ('/cust_register',(req,res)=>{
 		
-		bcrypt.hash(req.body.Password, 10, (err,hash) => {
+		bcrypt.hash(req.body.password, 10, (err,hash) => {
 					
 			if(err)
 			{
@@ -26,7 +26,7 @@ const path = require('path');
 					surname:req.body.surname,
 					email_address:req.body.email_address,
 					cell_no:req.body.cell_no,
-					password:req.body.Password
+					password:req.body.password
 				  }
 				  
 				  let add ={
@@ -65,7 +65,7 @@ const path = require('path');
 													res.send({'message':'User successfully Registered!'});
 													
 													
-													/*var transporter = nodemailer.createTransport({
+												/*var transporter = nodemailer.createTransport({
 													  service: 'gmail',
 													  auth: {
 														user: 'j.mnisi.c.jm@gmail.com',
@@ -76,17 +76,17 @@ const path = require('path');
 													let transporter = nodemailer.createTransport({
 														host: "smtp.gmail.com",
 														port: 587,
-														secure: false, // true for 587, false for other ports
+														secure: true, // true for 587, false for other ports
 														requireTLS: true,
 														auth: {
 															user: 'j.mnisi.c.jm@gmail.com', 
-															pass: '#Mdawekamatla1', 
+															pass: 'sina2015', 
 														},
 													});
 													
 													var mailOptions = {
 													  from: 'j.mnisi.c.jm@gmail.com',
-													  to: 'mfanafuthimdawe@gmail.com',
+													  to: ''+cust.email_address+'',
 													  subject: 'Tesing',
 													  text: `This user is registered now`
 													};
@@ -180,7 +180,7 @@ var upload = multer({ storage: storage })
 						
 						
 						let addRes ={
-						mail_address: req.body.email_address,
+						email: req.body.email_address,
 						street: req.body.street,
 						surburb: req.body.surburb,
 						city: req.body.city,
@@ -223,7 +223,7 @@ var upload = multer({ storage: storage })
 								
 								
 								
-							  res.send({'message':'restuarant successfully Registered!'});
+							
 							}
 						  })
 						}
@@ -249,7 +249,6 @@ var upload = multer({ storage: storage })
 					name:req.body.name,
 					surname:req.body.surname,
 					vehicleNo:req.body.vehiclNo,
-					address:req.body.address,
 					status:value,
 					email:req.body.email_address,
 					cellNo:req.body.cell_no,
@@ -262,7 +261,7 @@ var upload = multer({ storage: storage })
 				  console.log(req.body.name);
 				  console.log(req.body.surname);
 				  console.log(req.body.vehiclNo);
-					console.log(req.body.address);
+					
 					console.log(hash);
 					console.log(req.body.email_address);
 					console.log(req.body.cell_no);
@@ -280,9 +279,9 @@ var upload = multer({ storage: storage })
 							datb.query('SELECT * FROM driver where email = ?', driver.email, (error, results)=>{
 								if(results[0]){
 								  
-									var addess =
+									var address =
 									{
-										driverID:id,
+										email:req.body.email_address,
 										street:req.body.street,
 										surburb:req.body.surburb,
 										city:req.body.city,
@@ -300,21 +299,14 @@ var upload = multer({ storage: storage })
 									}
 								  })
 								  
-								  
-								  
-								  
-								  
-								  
-								  
-								  
-								  
+								 
 								}else{	
 									res.send({'message':'Driver already exist'});
 								
 								}
 							})
 							
-							res.send({'message':'Driver successfully Registered!'});
+							
 						}
 					  })
 					}

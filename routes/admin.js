@@ -61,21 +61,17 @@ router.get('/all_customers', (req,res)=>{
 
 //done
 
-  router.put('/restu_update', (req,res)=>{
+  router.put('/restu_update/:id', (req,res)=>{
     let restuarant ={ 
-      restuarant_id:req.body.restuarant_id,
-      restuarant_name:req.body.restuarant_name,
-      address:req.body.address,
-      password:req.body.password,
-      email:req.body.email
+      status:req.body.status
           
     }
-    let email = (req.body.email)  
-    datb.query('UPDATE restuarant SET ? WHERE email_address = "'+email+'"',[restuarant],function (error, results, fields)
+    //let email = (req.body.email)  
+    datb.query('UPDATE restuarant SET status = "'+ req.body.Status + '" WHERE restuarant_id = ?',[req.params.id],function (error, results, fields)
     {
         if (error) throw error 
         else{
-          datb.query('select * from restuarant where email_address = "'+email+'"',[restuarant],function (error, results, fields){
+          datb.query('select * from restuarant where restuarant_id = ?',[req.params.id],function (error, results, fields){
               return res.send({results})
           })
       

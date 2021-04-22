@@ -4,6 +4,8 @@ const mysql = require('mysql');
 const datb = require('../database/database');
 const session = require('express-session');
 var jwt = require('jsonwebtoken');
+var nodemailer = require('nodemailer');
+
 
 router.get('/cust_login', function(req, res) {
 
@@ -53,15 +55,15 @@ router.get('/cust_login', function(req, res) {
 						}
 						
 						
-						  datb.query('UPDATE logbook SET ? where email = "'+req.session.user+'"',[details],function (errors, results, fields)
-						  {
+						datb.query('UPDATE logbook SET ? where email = "'+req.session.user+'"',[details],function (errors, results, fields)
+						{
 							  if(results[0])
 							  {	
 								datb.query('select * from customer where email_address = "'+req.session.user+'"',function (errors, results, fields)
 								{
 									if(results[0].email_address)
 									{
-									 res.send({results})
+									 res.send(results)
 									 res.send({"message":"successfully logged in"})
 									}
 								})
@@ -127,6 +129,90 @@ router.get('/cust_login', function(req, res) {
  });
  
 
+
+router.get('/forgot_pass', function(req, res) {
+
+    var email = req.body.email_address;
+   
+	req.session.user = req.body.email_address;
+	
+    datb.query('select * from customer where email_address = ?',[email],(error,result)=>{
+        if(error){
+            res.send({"message":"error ocurred"});
+        }else{
+            if(result[0])
+			{
+				 	
+				let transporter = nodemailer.createTransport({
+					host: "smtp.gmail.com",
+					port: 587,
+					secure: true, // true for 587, false for other ports
+					requireTLS: true,
+					auth: {
+						user: 'j.mnisi.c.jm@gmail.com', 
+						pass: 'sina2015', 
+					},
+				});
+				
+				var mailOptions = {
+				  from: 'j.mnisi.c.jm@gmail.com',
+				  to: ''+ email +'',
+				  subject: 'Forgot password',
+				  text: `This user is registered now`
+				};
+
+				transporter.sendMail(mailOptions, function(error, info){
+				  if (error) {
+					console.log(error);
+				  } else {
+					console.log('Email sent: ' + info.response);
+				  }
+				});
+  
+            }else{
+						//this is for admin password
+						datb.query('select * from restuarant where email_address = ?',[email],(error,result)=>{
+						if(error){
+							res.send({"message":"error ocurred"});
+						}else{
+							if(result[0])
+							{
+									
+								let transporter = nodemailer.createTransport({
+									host: "smtp.gmail.com",
+									port: 587,
+									secure: true, // true for 587, false for other ports
+									requireTLS: true,
+									auth: {
+										user: 'j.mnisi.c.jm@gmail.com', 
+										pass: 'sina2015', 
+									},
+								});
+								
+								var mailOptions = {
+								  from: 'j.mnisi.c.jm@gmail.com',
+								  to: ''+ email +'',
+								  subject: 'Forgot password',
+								  text: `This user is registered now`
+								};
+
+								transporter.sendMail(mailOptions, function(error, info){
+								  if (error) {
+									console.log(error);
+								  } else {
+									console.log('Email sent: ' + info.response);
+								  }
+								});
+				  
+							}else{
+								res.send({"message":"Email does not exits"});
+							}
+						}
+					});
+            }
+        }
+    }); 
+ });
 module.exports = router;
 
 //done
