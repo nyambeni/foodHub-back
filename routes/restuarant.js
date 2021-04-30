@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const datb = require('../database/database');
-
-
+const session = require('express-session');
+var jwt = require('jsonwebtoken');
+var nodemailer = require('nodemailer');
+var cookieParser = require('cookie-parser');
 
 //here i will mess up the insert 
 
@@ -25,49 +27,130 @@ var upload = multer({ storage: storage })
 //new insert product
 router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 
-    const file = req.file
+		console.log(req.session.admin);
 	
-	let product={
-		product_name:req.body.product_name,
-		product_price:req.body.price,
-		product_description:req.body.product_description,
-		category:req.body.category,
-		resturantName:req.body.resturantName,
-		picture: file.path
-	  }
-		  
-    if (!file) {
-      const error = new Error('Please upload a file')
-      error.httpStatusCode = 400
-      return next(error)
-    }else{
-		var page = file.originalname;
-		
-		console.log(file.path);
-		console.log(req.body.product_name);
-		console.log(req.body.price);
-		console.log(req.body.product_description);
-		console.log(req.body.category);
-		console.log(req.body.resturantName);
-		
-		
-		datb.query('INSERT INTO products SET ?',[product], (error, results)=>{
-			if(error){
-			  res.send({'message':'Something went wrong!'})
-			}else{
-				res.send({'message':'product entered successfully!'})
+		if(req.session.admin)
+		{
+			
+			
+			datb.query('select * from restuarant where email_address = ?',[req.session.admin],(error,result)=>{
 				
+				if(error){
+					res.send({"message":"could not find the resturant"});
+				} else{
+					 if(result[0]){
+						
+							
+							 const token = jwt.sign(
+								{   
+									restID : result[0].	restuarant_id,
+									restuarant_name: result[0].restuarant_name,
+									
+									},
+									'login',
+									{
+										expiresIn: "1h"
+									}
+								);
+								
+								//display the incoded token
+								console.log(token);
+								//here we decode and display the token 
+								const header = jwt.decode(token);
+								console.log(header.address);
+							
+							
+								const file = req.file
+	
+								let product={
+									product_name:req.body.product_name,
+									product_price:req.body.price,
+									product_description:req.body.product_description,
+									category:req.body.category,
+									resturantName:header.header.restuarant_name,
+									picture: file.path
+								  }
+								
+								
+								
+								
+								if (!file) {
+								  const error = new Error('Please upload a file')
+								  error.httpStatusCode = 400
+								  return next(error)
+								}else{
+									var page = file.originalname;
+									
+									console.log(file.path);
+									console.log(req.body.product_name);
+									console.log(req.body.price);
+									console.log(req.body.product_description);
+									console.log(req.body.category);
+									console.log(req.body.resturantName);
+									
+									
+									datb.query('INSERT INTO products SET ?',[product], (error, results)=>{
+										if(error){
+										  res.send({'message':'Something went wrong!'})
+										}else{
+											res.send({'message':'product entered successfully!'})
+											
+										}
+									})
+								 
+								}
+							} //if ending
+							
+							
+							
+							
+							
+							
+							
+					 
+					}//else if ending
+				})
+		
+		}else{
+				res.send({'message':'please login '})
 			}
-		})
-     
-	}
-})
+});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
 
 
 //get product by resturant
 router.get('/selectProduct/:resturantName', (req,res)=>{
 
-  connection.query('select * from proctuct where resturantName=?', [req.params.resturantName], function (error, results, fields) {
+  datb.query('select * from products where resturantName=?', [req.params.resturantName], function (error, results, fields) {
 	  if (error) throw error;
 	  res.end(JSON.stringify(results));
 	});

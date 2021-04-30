@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const datb = require('../database/database');
+var cookieParser = require('cookie-parser');
 
 router.put('/cust_update', (req,res)=>{
 	  
@@ -71,6 +72,37 @@ router.put('/cust_update', (req,res)=>{
 	
 	
 }); 
+
+//get product by resturant
+ router.get('/all_resturant_foods', (req,res)=>{
+
+		if(req.session.user)
+		{
+		
+			
+		
+
+		  datb.query('select * from products where resturantName=?', [req.params.resturantName], function (error, results, fields) {
+			  if (error) throw error;
+			  res.end(JSON.stringify(results));
+			});
+
+
+
+				
+		
+			
+		}else{
+			 res.send({"failed":"try to log in first"})
+			 console.log(req.session.user)
+		}
+	
+	
+	
+});
+
+
+
   
  router.put('/cust_logout', (req,res)=>{
 

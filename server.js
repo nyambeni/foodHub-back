@@ -8,11 +8,15 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 var jwt = require('jsonwebtoken');
 const session = require('express-session');
+var cookieParser = require('cookie-parser');
 
 //session express
+ app.use(cookieParser());
+var MemoryStore =session.MemoryStore;
 var sess = {
 	secret: process.env.SESSION_SECRET,
 	cookie: {},
+	store: new MemoryStore(),
 	saveUninitialized: true, //false
 	unset: 'destroy',
 	resave: false,
