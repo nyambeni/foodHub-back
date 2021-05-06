@@ -164,7 +164,7 @@ var upload = multer({ storage: storage })
 					{
 							let restaurant={
 							restuarant_name:req.body.restuarant_name,
-							password:hash,
+							password:req.body.Password, //password:hash
 							email_address:req.body.email_address,
 							cellNo:req.body.cellNo,
 							logo:file.path,

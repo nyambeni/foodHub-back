@@ -27,13 +27,10 @@ var upload = multer({ storage: storage })
 //new insert product
 router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 
-		console.log(req.session.admin);
-	
-		if(req.session.admin)
-		{
+		
 			
 			
-			datb.query('select * from restuarant where email_address = ?',[req.session.admin],(error,result)=>{
+			datb.query('select * from restuarant where email_address = ?',[req.body.email],(error,result)=>{
 				
 				if(error){
 					res.send({"message":"could not find the resturant"});
@@ -57,7 +54,7 @@ router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 								console.log(token);
 								//here we decode and display the token 
 								const header = jwt.decode(token);
-								console.log(header.address);
+								//console.log(header.address);
 							
 							
 								const file = req.file
@@ -67,7 +64,7 @@ router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 									product_price:req.body.price,
 									product_description:req.body.product_description,
 									category:req.body.category,
-									resturantName:header.header.restuarant_name,
+									resturantName:header.restuarant_name,
 									picture: file.path
 								  }
 								
@@ -86,7 +83,7 @@ router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 									console.log(req.body.price);
 									console.log(req.body.product_description);
 									console.log(req.body.category);
-									console.log(req.body.resturantName);
+									console.log(header.restuarant_name);
 									
 									
 									datb.query('INSERT INTO products SET ?',[product], (error, results)=>{
@@ -111,9 +108,7 @@ router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 					}//else if ending
 				})
 		
-		}else{
-				res.send({'message':'please login '})
-			}
+		
 });
 			
 			

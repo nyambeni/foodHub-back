@@ -4,13 +4,17 @@ const router = express.Router();
 const mysql = require('mysql');
 const datb = require('../database/database');
 var jwt = require('jsonwebtoken');
+const session = require('express-session');
+var jwt = require('jsonwebtoken');
+var nodemailer = require('nodemailer');
+
 
 // vendor / customer/ and himself (super admin) CRUD
 // products/ menu/ categories orders(vendor/restaurant)
 
 router.get('/all_restuarant', (req,res)=>{
 
-	if(req.session.admin)
+	if(typeof req.session.admin)
 	{
 		
 		datb.query('SELECT * FROM restuarant',function(error,results,fields){
@@ -28,7 +32,7 @@ router.get('/all_restuarant', (req,res)=>{
 		});
 	}else{
 		 res.send({"failed":"try to log in first"})
-		 console.log(req.session.user)
+		 console.log(req.session.admin)
 	}
 });
 
@@ -36,7 +40,7 @@ router.get('/all_restuarant', (req,res)=>{
 router.get('/all_customers', (req,res)=>{
 
 
-	if(req.session.superAdmin)
+	if(typeof req.session.admin)
 	{
 		datb.query('SELECT * FROM customer',function(error,results,fields){
 	 
@@ -83,13 +87,14 @@ router.get('/all_customers', (req,res)=>{
 router.delete('/restuarant/:id',function(req, res){
    
     datb.query('DELETE FROM restuarant WHERE restuarant_id = ?',[req.params.id], (err,results,fields)=>{
-        if(!err){
-                    res.send('Deleted successfully.');
-                }else{
-                    console.log(err)
-                }
-       }); 
-    })
+        if(!err)
+		{
+			res.send('Deleted successfully.');
+		}else{
+			console.log(err)
+		}
+    }); 
+})
 
 
 

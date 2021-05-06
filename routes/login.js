@@ -12,7 +12,7 @@ router.get('/cust_login', function(req, res) {
     var email = req.body.email_address;
     var password = req.body.password;
 	//this is a session dont mess with it please
-	
+	req.session.user = req.body.email_address;
 	
     datb.query('select * from customer where email_address = ?',[email],(error,result)=>{
         if(error){
@@ -23,6 +23,7 @@ router.get('/cust_login', function(req, res) {
                 if(result[0].password == password){
                     res.send({"login successfully":result})
                    req.session.user = req.body.email_address;
+				   console.log(req.session.user);
 				   const token = jwt.sign(
 						{   
 							custID : result[0].customer_ID,
@@ -65,6 +66,7 @@ router.get('/cust_login', function(req, res) {
 									{
 									 res.send(results)
 									 res.send({"message":"successfully logged in"})
+									 
 									}
 								})
 								
@@ -88,7 +90,10 @@ router.get('/cust_login', function(req, res) {
 	
     var email = req.body.email_address;
     var password = req.body.password;
+	
 	req.session.admin = req.body.email_address;
+	req.session.user = req.body.email_address;
+	
 	
     datb.query('select * from restuarant where email_address = ?',[email],(error,result)=>{
         if(error){

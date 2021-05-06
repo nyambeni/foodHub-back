@@ -43,7 +43,7 @@ router.put('/cust_update', (req,res)=>{
 
 		if(req.session.user)
 		{
-		
+			console.log(req.session.user);
 			datb.query('select * from customeradd where email = "'+req.session.user+'"',function (error, results, fields){
 			
 				if(results[0].surburb)
@@ -74,31 +74,18 @@ router.put('/cust_update', (req,res)=>{
 }); 
 
 //get product by resturant
- router.get('/all_resturant_foods', (req,res)=>{
+router.get('/all_resturant_foods/:resturantNam', (req,res)=>{
+	 
+	 var name = req.params.resturantNam;
+  datb.query('SELECT * FROM products WHERE resturantName = "'+name+'"', function (error, results, fields) {
+	  if(error)
+	  {
+		   throw error;
+	  }else{
+		res.send(results);
+	  }
+	})
 
-		if(req.session.user)
-		{
-		
-			
-		
-
-		  datb.query('select * from products where resturantName=?', [req.params.resturantName], function (error, results, fields) {
-			  if (error) throw error;
-			  res.end(JSON.stringify(results));
-			});
-
-
-
-				
-		
-			
-		}else{
-			 res.send({"failed":"try to log in first"})
-			 console.log(req.session.user)
-		}
-	
-	
-	
 });
 
 

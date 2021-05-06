@@ -11,21 +11,23 @@ const session = require('express-session');
 var cookieParser = require('cookie-parser');
 
 //session express
+
+
+//app.use(router)
  app.use(cookieParser());
 var MemoryStore =session.MemoryStore;
 var sess = {
 	secret: process.env.SESSION_SECRET,
 	cookie: {},
 	store: new MemoryStore(),
-	saveUninitialized: true, //false
-	unset: 'destroy',
+	saveUninitialized: false, //false
+	unset: '',
 	resave: false,
 	name: 'session cookie name',
 	secret: 'secret token',
 	duration: 30 * 60 * 1000,
 	activeDuration: 5 * 60 * 1000
 }
-
 app.use(session(sess));
 
 
