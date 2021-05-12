@@ -113,41 +113,13 @@ router.post('/new_products',upload.single('picture'),(req,res,next)=>{
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-
 
 //get product by resturant
 router.get('/selectProduct/:resturantName', (req,res)=>{
 
   datb.query('select * from products where resturantName=?', [req.params.resturantName], function (error, results, fields) {
 	  if (error) throw error;
-	  res.end(JSON.stringify(results));
+	  res.end(results);
 	});
 
 
@@ -184,23 +156,26 @@ router.get('/selectProduct/:resturantName', (req,res)=>{
 
 
 // restuarant update
-router.put('/restu_update', (req,res)=>{
-  let restuarant ={ 
-    address:req.body.address,
-    password:req.body.password,
-    email_address:req.body.email_address      
-  }
-  let restuarant_id = (req.body.restuarant_id)  
-  datb.query('UPDATE restuarant SET ? WHERE restuarant_id = "'+restuarant_id+'"',[restuarant],function (error, results, fields)
-  {
-      if (error) throw error 
-      else{
-        datb.query('select * from restuarant where restuarant_id = ?',[restuarant_id],function (error, results, fields){
-            return res.send({results})
-        })
-    
-        }
-  })
+  router.put('/restu_update/:id', (req,res)=>{
+    let restuarant ={ 
+      restuarant_name:req.body.restuarant_name,
+      password:req.body.password,
+      cellNo :req.body.cellNo, 
+      email_address:req.body.email  
+    }
+
+    datb.query('UPDATE restuarant SET ? WHERE restuarant_id = "'+req.params.id+'"',[restuarant],function (error, results, fields)
+    {
+        if (error) throw error 
+        else{
+          datb.query('select * from restuarant where restuarant_id = "'+req.params.id+'"',function (error, results, fields){
+              return res.send({results})
+          })
+      
+          }
+    })
+	
+	
 
 })
 
@@ -230,15 +205,15 @@ router.put('/restu_update', (req,res)=>{
 // products update
 // datb.query('select * from products where product_id = "'+product_id+'"',[product],function (error, results, fields){
 
-router.put('/product_update', (req,res)=>{
+router.put('/product_update/:product_id', (req,res)=>{
   let product ={ 
    product_name:req.body.name,
     product_price:req.body.price,
     product_description:req.body.product_description
           
   }
-  let product_id = (req.body.product_id)  
-  datb.query('UPDATE products SET ? WHERE product_id = "'+product_id+'"',[product],function (error, results, fields)
+  
+  datb.query('UPDATE products SET ? WHERE product_id = "'+req.param.product_id+'"',[product],function (error, results, fields)
   {
       if (error) throw error 
       else{
@@ -254,13 +229,13 @@ router.put('/product_update', (req,res)=>{
 
 // delete restuarant
 
-router.delete('/restu_delete/:id',function(req, res){
+router.delete('/product_delete/:id',function(req, res){
    
     let connection = mysql.createConnection(datb);
     //let email = ({email_address:req.body.email_address});
     //let sql = 'DELETE FROM restuarant_admin where email_address = "'+email_address+'"'
        
-       connection.query('DELETE * FROM restuarant where restuarant_id =?', [req.params.id], function(error, results, fields){
+       connection.query('DELETE * FROM product where product_id =?', [req.params.id], function(error, results, fields){
            if(error) throw error;
            else
            {
