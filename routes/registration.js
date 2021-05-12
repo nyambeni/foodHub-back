@@ -69,7 +69,7 @@ const path = require('path');
 													  service: 'gmail',
 													  auth: {
 														user: 'j.mnisi.c.jm@gmail.com',
-														pass: '#Mdawekamatla1'
+														pass: '#'
 													  }
 													});*/
 													
@@ -80,7 +80,7 @@ const path = require('path');
 														requireTLS: true,
 														auth: {
 															user: 'j.mnisi.c.jm@gmail.com', 
-															pass: 'sina2015', 
+															pass: '#', 
 														},
 													});
 													
@@ -246,26 +246,15 @@ var upload = multer({ storage: storage })
 			}else
 			{
 				  let driver={
-					name:req.body.name,
-					surname:req.body.surname,
-					vehicleNo:req.body.vehiclNo,
-					status:value,
-					email:req.body.email_address,
-					cellNo:req.body.cell_no,
-					pasword:hash
+					name		:req.body.name,
+					surname		:req.body.surname,
+					vehicleNo	:req.body.vehiclNo,
+					status		:value,
+					email		:req.body.email_address,
+					cellNo		:req.body.cell_no,
+					pasword		:hash
 				  }
 				  
-				  
-				  
-				  
-				  console.log(req.body.name);
-				  console.log(req.body.surname);
-				  console.log(req.body.vehiclNo);
-					
-					console.log(hash);
-					console.log(req.body.email_address);
-					console.log(req.body.cell_no);
-					console.log(value);
 				
 				  datb.query('SELECT * FROM driver where email = ?', driver.email, (error, results)=>{
 					if(results[0]){

@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 
 
+
 router.get('/cust_login', function(req, res) {
 
     var email = req.body.email_address;
@@ -66,7 +67,7 @@ router.get('/cust_login', function(req, res) {
 									{
 									 res.send(results)
 									 res.send({"message":"successfully logged in"})
-									 
+									
 									}
 								})
 								
