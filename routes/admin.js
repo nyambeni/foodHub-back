@@ -50,7 +50,7 @@ router.get('/all_customers', (req,res)=>{
 			}
 			else{
 						console.log(req.session.superAdmin)
-					   return res.send({data:results})
+					   res.send(results)
 				}
 
 		});
